@@ -21,11 +21,13 @@ public class BookService {
     }
 
     public Response getBookByTitle(String title) {
-        String request = "http://gutendex.com/books?search=";
+        String request = "https://gutendex.com/books/?search=";
+        String search = title.replace(" ", "%20");
         System.out.println(request+title);
-        String data = consumoAPI.getData(request+title);
+        var data = consumoAPI.getData(request+search);
 
-        return conversor.ObtenerDatos(data,Response.class);
+        Response response = conversor.ObtenerDatos(data,Response.class);
 
+        return response;
     }
 }

@@ -1,6 +1,7 @@
 package com.alura.literalura;
 
 import com.alura.literalura.entities.Book;
+import com.alura.literalura.model.LibroJson;
 import com.alura.literalura.model.Response;
 import com.alura.literalura.service.BookService;
 import com.alura.literalura.service.ConsumoAPI;
@@ -70,10 +71,10 @@ public class LiteraluraApplication implements CommandLineRunner {
                         scanner.nextLine();
                         System.out.println("Bucar Libro por Titulo");
                         String search = scanner.nextLine();
-                        String searchEncoded = search.replace(" ", "%20");
 
                         System.out.println("Buscando libro...");
-                        bookService.getBookByTitle(searchEncoded);
+                        Response response= bookService.getBookByTitle(search);
+                        System.out.println(response);
 
                         break;
                 }
