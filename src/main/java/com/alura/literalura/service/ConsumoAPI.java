@@ -1,5 +1,7 @@
 package com.alura.literalura.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -17,14 +19,12 @@ public class ConsumoAPI {
                 .uri(URI.create(url))
                 .build();
         HttpResponse<String> response = null;
-
         try {
             response = client
                     .send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-        String json = response.body();
-        return json;
+        return response.body();
     }
 }
