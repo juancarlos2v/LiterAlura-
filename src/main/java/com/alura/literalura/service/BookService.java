@@ -1,33 +1,47 @@
 package com.alura.literalura.service;
 
+import com.alura.literalura.entities.Author;
+import com.alura.literalura.entities.Book;
+import com.alura.literalura.model.AuthorJson;
 import com.alura.literalura.model.LibroJson;
 import com.alura.literalura.model.Response;
+import com.alura.literalura.repositories.BookRepository;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 public class BookService {
 
     ConsumoAPI consumoAPI = new ConsumoAPI();
-    ConvertirDatos conversor=new ConvertirDatos();
+    ConvertirDatos conversor = new ConvertirDatos();
 
+    BookRepository bookRepository;
 
-    public Response getBooks(String url) {
-        //String json = "http://gutendex.com/books/?page=1";
-        String data = consumoAPI.getData(url);
-        Response results = conversor.ObtenerDatos(data,Response.class);
-
-        //System.out.println("=====PAGINA 1=====");
-        return  results;
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
     }
 
-    public Response getBookByTitle(String title) {
+    public void getBooks() {
+        System.out.println("Cargando libros...");
+        List<Book> books= bookRepository.findAll();
+        for (Book book : books) {
+            System.out.println(book.getTitle());
+        }
+    }
+
+    public void addBookByTitle(String title) {
+        System.out.println("Cargando Resultados...");
         String request = "https://gutendex.com/books/?search=";
         String search = title.replace(" ", "%20");
-        System.out.println(request+title);
-        var data = consumoAPI.getData(request+search);
 
-        Response response = conversor.ObtenerDatos(data,Response.class);
+        var data = consumoAPI.getData(request + search);
+        var libro = conversor.ObtenerDatos(data , Response.class);
 
-        return response;
+        LibroJson librojson= libro.results().get(0);
+        Book book = new Book(librojson);
+
+        bookRepository.save(book);
+        System.out.println("======Libro guardado======");
+        System.out.println(librojson);
     }
 }
